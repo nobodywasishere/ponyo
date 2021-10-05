@@ -18,9 +18,6 @@ class LEGv8_Sim:
     mem_size = 0
     mem = []
 
-    # Stack
-    stack = []
-
     # Assembly
     asm = []
 
@@ -39,9 +36,10 @@ class LEGv8_Sim:
     #   Decode instruction
     #   Execute instruction
     def run(self):
-        self.clean()
         self.findSymbols()
-
+        self.initialize()
+        if self.debug:
+            print(self.sym)
         while self.pc < len(self.asm):
             line = self.asm[self.pc]
             if self.debug: 
@@ -57,21 +55,13 @@ class LEGv8_Sim:
         # exit when program stops
         return
 
-    # Removes blank lines and trailing spaces
-    def clean(self):
-        code_clean = []
-        for line_i in range(len(self.asm)):
-            if self.asm[line_i] != "":
-                code_clean.append(self.asm[line_i].strip().upper())
-        self.asm = code_clean[:]
-
     # Search assembly for symbols and return a dict of
     #   their names and values
     def findSymbols(self):
         line_i = 0
         for line in self.asm:
-            op = line.split(' ')[0]
-            if op[-1] == ":":
+            op = line.strip().upper().split(' ')[0]
+            if len(op) > 1 and op[-1] == ":":
                 self.sym[op[:-1]] = line_i
             line_i = line_i + 1
 
@@ -79,7 +69,7 @@ class LEGv8_Sim:
     # Initialize data memory
     # Initialize flags
     def initialize(self):
-        for i in range(32):
+        for i in range(32 - len(self.reg)):
             self.reg.append(0)
 
         # initialize data memory to zero
@@ -106,13 +96,14 @@ class LEGv8_Sim:
         # | CB   | opcode | Rt   | Addr | -    | -     |
         # | IW   | opcode | Rd   | Imm  | -    | -     |
 
-        # Regex decode instruction
+        # Force uppercase
+        assembly = assembly.strip().upper()
 
         # Remove duplicate spaces and tabs
         # and comments
         assembly = re.sub(r'( +|\t+|//.*)', ' ', assembly)
 
-        # Remove symbol
+        # Remove symbol location
         re_symbol = r'^[a-zA-Z0-9_\-.]+:'
         assembly = re.sub(re_symbol, '', assembly).strip()
 
@@ -120,10 +111,17 @@ class LEGv8_Sim:
         re_chars = r'(\[|\]|,)'
         assembly = re.sub(re_chars, '', assembly).strip()
 
+        # Replace symbol value
+        re_symbol = r'=[a-zA-Z0-9]+'
+        matched_symbols = re.search(re_symbol, assembly)
+        if matched_symbols:
+            match = matched_symbols.group()
+            re.sub(match, str(self.sym[match[1:]]), assembly)
+
         # Split into list
         assembly = assembly.split(' ')
 
-        if len(assembly) > 0: instr['op'] = assembly[0]
+        if len(assembly) > 0: instr['op']   = assembly[0]
         if len(assembly) > 1: instr['arg1'] = assembly[1]
         if len(assembly) > 2: instr['arg2'] = assembly[2]
         if len(assembly) > 3: instr['arg3'] = assembly[3]
@@ -133,11 +131,20 @@ class LEGv8_Sim:
 
     # Execute an instruction given args
     def execute(self, instr):
+        if   instr['op'] == "ADD":
+            Rd = int(instr['arg1'][1:])
+            Rn = int(instr['arg2'][1:])
+            Rm = int(instr['arg3'][1:])
+            self.reg[Rd] = self.reg[Rn] + self.reg[Rm]
+        elif instr['op'] == "ADDI":
+            pass
         pass
 
     # Prints a pretty output of the current state
     #   of the processor simulation
     def printInfo(self):
+        for i in range(len(self.reg)):
+            print(f'Reg X{i}: {self.reg[i]}')
         pass
 
 
