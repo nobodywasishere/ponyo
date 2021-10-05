@@ -32,7 +32,7 @@ class LEGv8_Sim:
         'C': 0  # carry
     }
 
-    # Symbols
+    # SymbolsSymSym
     sym = {}
 
     # Step through each line of assembly
@@ -42,10 +42,10 @@ class LEGv8_Sim:
         self.clean()
         self.findSymbols()
 
-        while self.pc < len(self.asm) - 1:
+        while self.pc < len(self.asm):
             line = self.asm[self.pc]
             if self.debug: 
-                print(line)
+                print(f'{self.pc:3d}: {line}')
             instr = self.decode(line)
             self.execute(instr)
             if '//$break' in line:
@@ -62,7 +62,7 @@ class LEGv8_Sim:
         code_clean = []
         for line_i in range(len(self.asm)):
             if self.asm[line_i] != "":
-                code_clean.append(self.asm[line_i].strip())
+                code_clean.append(self.asm[line_i].strip().upper())
         self.asm = code_clean[:]
 
     # Search assembly for symbols and return a dict of
@@ -72,7 +72,7 @@ class LEGv8_Sim:
         for line in self.asm:
             op = line.split(' ')[0]
             if op[-1] == ":":
-                self.symbols[op[:-1]] = line_i
+                self.sym[op[:-1]] = line_i
             line_i = line_i + 1
 
     # Initialize registers
@@ -87,6 +87,8 @@ class LEGv8_Sim:
 
     # Decode an instruction into its component parts
     def decode(self, assembly):
+        # Assumes assembly is correctly formatted
+
         instr = {
             'op': None,
             'arg1': None,
@@ -95,16 +97,37 @@ class LEGv8_Sim:
             'arg4': None
         }
 
-        # | type | op     | arg1 | arg2 | arg3  | arg4 |
-        # |------|--------|------|------|-------|------|
-        # | R    | opcode | Rd   | Rn   | shamt | Rm   |
-        # | I    | opcode | Rd   | Rn   | Imm   | -    |
-        # | D    | opcode | Rt   | Rn   | op    | Addr |
-        # | B    | opcode | Addr | -    | -     | -    |
-        # | CB   | opcode | Rt   | Addr | -     | -    |
-        # | IW   | opcode | Rd   | Imm  | -     | -    |
+        # | type | op     | arg1 | arg2 | arg3 | arg4  |
+        # |------|--------|------|------|------|-------|
+        # | R    | opcode | Rd   | Rn   | Rm   | shamt |
+        # | I    | opcode | Rd   | Rn   | Imm  | -     |
+        # | D    | opcode | Rt   | Rn   | op   | Addr  |
+        # | B    | opcode | Addr | -    | -    | -     |
+        # | CB   | opcode | Rt   | Addr | -    | -     |
+        # | IW   | opcode | Rd   | Imm  | -    | -     |
 
         # Regex decode instruction
+
+        # Remove duplicate spaces and tabs
+        # and comments
+        assembly = re.sub(r'( +|\t+|//.*)', ' ', assembly)
+
+        # Remove symbol
+        re_symbol = r'^[a-zA-Z0-9_\-.]+:'
+        assembly = re.sub(re_symbol, '', assembly).strip()
+
+        # Remove unnecessary characters
+        re_chars = r'(\[|\]|,)'
+        assembly = re.sub(re_chars, '', assembly).strip()
+
+        # Split into list
+        assembly = assembly.split(' ')
+
+        if len(assembly) > 0: instr['op'] = assembly[0]
+        if len(assembly) > 1: instr['arg1'] = assembly[1]
+        if len(assembly) > 2: instr['arg2'] = assembly[2]
+        if len(assembly) > 3: instr['arg3'] = assembly[3]
+        if len(assembly) > 4: instr['arg4'] = assembly[4]
 
         return instr
 
