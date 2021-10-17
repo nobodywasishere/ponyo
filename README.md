@@ -1,5 +1,6 @@
-# LEGv8
+# ponyo
 
+Ponyo is a CPU simulator currently supporting (some of) LEGv8.
 
 ## Simulator
 
