@@ -1,7 +1,7 @@
 import re
 
 # Decode an instruction into its component parts
-def decode(assembly, sym):
+def decode(pc, assembly, sym):
     # Assumes assembly is correctly formatted
 
     instr = {
@@ -41,7 +41,9 @@ def decode(assembly, sym):
     matched_symbols = re.search(re_symbol, assembly)
     if matched_symbols:
         match = matched_symbols.group()
-        re.sub(match, str(sym[match[1:]]), assembly)
+        assembly = assembly.replace(match, str(sym[match[1:]]-pc))
+
+    assembly = assembly.replace('XZR', 'X31')
 
     # Remove duplicate spaces and tabs (again)
     assembly = re.sub(r'( +|\t+)', ' ', assembly)

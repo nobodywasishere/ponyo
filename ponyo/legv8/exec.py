@@ -49,7 +49,7 @@ def exec(mem, instr):
         result = mem.regs[int(a1[1:])] = mem.regs[int(a2[1:])] & immu2int(a3)
 
     elif op == "B":
-        mem.pc = int(a1)
+        mem.pc += int(a1) - 1
     # elif op[:2] == "B."
     #     cond = op[2:]
     #     raise Exception("Branches not implemented (yet)")
@@ -57,10 +57,12 @@ def exec(mem, instr):
     #     pass
     # elif op == "BR":
     #     pass
-    # elif op == "CBNZ":
-    #     pass
-    # elif op == "CBZ":
-    #     pass
+    elif op == "CBNZ":
+        if mem.regs[int(a1[1:])] != 0:
+            mem.pc += int(a2) - 1
+    elif op == "CBZ":
+        if mem.regs[int(a1[1:])] == 0:
+            mem.pc += int(a2) - 1
     
     elif op == "EOR":
         mem.regs[int(a1[1:])] = mem.regs[int(a2[1:])] ^ mem.regs[int(a3[1:])]
@@ -101,7 +103,7 @@ def exec(mem, instr):
         value = mem.regs[int(a1[1:])]
         index = mem.regs[int(a2[1:])] + immu2int(a3)
         for i in range(8):
-            mem.dmem[index+(8-i-1)] = (value >> 8*i) & 7
+            mem.dmem[index+(8-i-1)] = (value >> 8*i) & (mem.memMod - 1)
     # elif op == "STURB":
     #     pass
     # elif op == "STURH":

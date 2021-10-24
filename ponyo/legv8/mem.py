@@ -7,12 +7,12 @@ class mem:
         'C': 0  # carry
     }
     dmem = []
-    memMod = 8
+    memMod = 256
     pc = 0
     pcMod = 32
     regs = []
     regsNum = 32
-    regsMod = 32
+    regsMod = 64
 
     # initialize the memory and registers
     def __init__(self, dmem=[], regsNum=32):
@@ -31,4 +31,4 @@ class mem:
         self.regs[31] = 0
 
         for i in range(len(self.dmem)):
-            self.dmem[i] = self.dmem[i] % 8
+            self.dmem[i] = self.dmem[i] % self.memMod
