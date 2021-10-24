@@ -4,7 +4,7 @@ import os, sys
 import re
 import argparse
 
-from legv8.mem    import mem
+from legv8.mem    import mem, printMem
 from legv8.exec   import exec
 from legv8.decode import decode
 
@@ -30,19 +30,21 @@ class LEGv8_Sim:
         while self.mem.pc < len(self.imem):
             line = self.imem[self.mem.pc]
             if self.debug:
-                print()
                 print(f'{self.mem.pc:3d}: {line}')
-                self.printInfo()
+
             instr = decode(self.mem.pc, line, self.sym)
             self.mem = exec(self.mem, instr)
-            if '//$break' in line:
-                self.printInfo()
-                input(': ')
-            if self.step:
-                input(': ')
+
+            if '//$break' in line or self.step:
+                cmd = "stop"
+                while cmd != "":
+                    cmd = input(': ')
+                    if cmd == 'p':
+                        printMem(self.mem)
+    
             self.mem.pc += 1 # increment PC at the end of the cycle
         
-        self.printInfo()
+        printMem(self.mem)
         # exit when program stops
         return
 
@@ -55,26 +57,6 @@ class LEGv8_Sim:
             if len(op) > 1 and op[-1] == ":":
                 self.sym[op[:-1]] = line_i
             line_i = line_i + 1
-
-    # Prints a pretty output of the current state
-    #   of the processor simulation
-    def printInfo(self):
-        regs = self.mem.regs
-        print(f'Registers:')
-        for i in range(8):
-            i *= 4
-            print(f' X{i:02}: {regs[i]:016x} X{i+1:02}: {regs[i+1]:016x}'
-                  f' X{i+2:02}: {regs[i+2]:016x} X{i+3:02}: {regs[i+3]:016x}')
-
-        print(f'Memory: ')
-        for i in range(8):
-            i *= 32
-            memstr = ""
-            for j in range(32):
-                memstr += f'{self.mem.dmem[i+j]:02x}'
-                if (j+1) % 8 == 0:
-                    memstr += " "
-            print(f' {i:02x}-{i+31:02x}: {memstr}')
         
 
 parser = argparse.ArgumentParser()

@@ -34,7 +34,7 @@ def decode(pc, assembly, sym):
 
     # Remove unnecessary characters
     re_chars = r'(\[|\]|,)'
-    assembly = re.sub(re_chars, '', assembly).strip()
+    assembly = re.sub(re_chars, ' ', assembly).strip()
 
     # Replace symbol value
     re_symbol = r'=[a-zA-Z0-9]+'
