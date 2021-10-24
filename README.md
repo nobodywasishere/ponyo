@@ -1,6 +1,6 @@
 # ponyo
 
-Ponyo is a CPU simulator currently supporting (some of) LEGv8.
+Ponyo is a (work-in-progress) CPU simulator currently supporting (some of) LEGv8.
 
 ## Simulator
 
@@ -13,13 +13,16 @@ Ponyo is a CPU simulator currently supporting (some of) LEGv8.
 
 ### CLI
 
-CLI for interacting with simulator.
+CLI for interacting with simulator. If no data memory is provided, 
+a default of 256 bytes of zeros will be created.
 
 ```
-$ ./LEGv8/sim.py -f assembly_code.asm -d data_mem.hex
+$ ./ponyo/sim.py -f assembly_code.asm -d data_mem.hex
 ```
 
 ### TUI
+
+TODO/CONCEPT
 
 Optional TUI for interacting with simulator. Has a handful of components. 
 
@@ -39,4 +42,86 @@ Optional TUI for interacting with simulator. Has a handful of components.
 
 ### Library
 
+TODO/CONCEPT
+
 The simulator can also be integrated into another Python program as a library.
+
+## Supported Architectures
+
+### LEGv8 Harvard
+
+26/57 supported
+
+- [x] ADD
+- [x] ADDI
+- [x] ADDS
+- [x] ADDIS
+
+- [x] AND
+- [x] ANDI
+- [x] ANDS
+- [x] ANDIS
+
+- [x] B
+- [ ] B.COND
+- [ ] BL
+- [ ] BR
+- [x] CBNZ
+- [x] CBZ
+
+- [x] EOR
+- [x] EORI
+
+- [x] LDUR
+- [ ] LDURB
+- [ ] LDURH
+- [ ] LDURSW
+- [ ] LDXR
+
+- [x] LSL
+- [x] LSR
+
+- [ ] MOVK
+- [ ] MOVZ
+
+- [x] ORR
+- [x] ORRI
+
+- [x] STUR
+- [ ] STURB
+- [ ] STURH
+- [ ] STURSW
+- [ ] STXR
+
+- [x] SUB
+- [x] SUBI
+- [x] SUBS
+- [x] SUBIS
+
+- [ ] FADDS
+- [ ] FADDD
+- [ ] FCMPS
+- [ ] FCMPD
+- [ ] FDIVS
+- [ ] FDIVD
+- [ ] FMULS
+- [ ] FMULD
+- [ ] FSUBS
+- [ ] FSUBD
+
+- [ ] LDURS
+- [ ] LDURD
+- [ ] MUL
+- [ ] SDIV
+- [ ] SMULH
+- [ ] UDIV
+- [ ] UMULH
+
+- [x] CMP
+- [x] CMPI
+- [ ] LDA
+- [x] MOV
+
+### RISC-V
+
+TODO
