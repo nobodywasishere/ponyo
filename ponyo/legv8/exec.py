@@ -49,20 +49,43 @@ def exec(mem, instr):
         result = mem.regs[int(a1[1:])] = mem.regs[int(a2[1:])] & immu2int(a3)
 
     elif op == "B":
-        mem.pc += int(a1) - 1
-    # elif op[:2] == "B."
-    #     cond = op[2:]
-    #     raise Exception("Branches not implemented (yet)")
-    # elif op == "BL":
-    #     pass
-    # elif op == "BR":
-    #     pass
+        mem.pc += immu2int(a1) - 1
+    elif op[:2] == "B.":
+        cond = op[2:]
+        branch = False
+        if   cond == "EQ" and mem.flags['Z'] == 1:
+            branch = True
+        elif cond == "NE" and mem.flags['Z'] == 0:
+            branch = True
+        elif cond == "LT" and mem.flags['N'] != mem.flags['V']:
+            branch = True
+        elif cond == "LE" and not (mem.flags['Z'] == 0 and mem.flags['N'] == mem.flags['V']):
+            branch = True
+        elif cond == "GT" and (mem.flags['Z'] == 0 and mem.flags['N'] == mem.flags['V']):
+            branch = True
+        elif cond == "GE" and mem.flags['N'] == mem.flags['V']:
+            branch = True
+        elif cond == "LO" and mem.flags['C'] == 0:
+            branch = True
+        elif cond == "LS" and not (mem.flags['Z'] == 0 and mem.flags['C'] == 1):
+            branch = True
+        elif cond == "HI" and (mem.flags['Z'] == 0 and mem.flags['C'] == 1):
+            branch = True
+        elif cond == "HS" and mem.flags['C'] == 1:
+            branch = True
+        if branch:
+            mem.pc += immu2int(a1) - 1
+    elif op == "BL":
+        mem.regs[30] = mem.pc + 1
+        mem.pc += immu2int(a1) - 1
+    elif op == "BR":
+        mem.pc = mem.regs[int(a1[1:])] - 1
     elif op == "CBNZ":
         if mem.regs[int(a1[1:])] != 0:
-            mem.pc += int(a2) - 1
+            mem.pc += immu2int(a2) - 1
     elif op == "CBZ":
         if mem.regs[int(a1[1:])] == 0:
-            mem.pc += int(a2) - 1
+            mem.pc += immu2int(a2) - 1
     
     elif op == "EOR":
         mem.regs[int(a1[1:])] = mem.regs[int(a2[1:])] ^ mem.regs[int(a3[1:])]
@@ -70,15 +93,11 @@ def exec(mem, instr):
         mem.regs[int(a1[1:])] = mem.regs[int(a2[1:])] ^ immu2int(a3)
 
     elif op == "LDUR":
-        index = mem.regs[int(a2[1:])] + immu2int(a3)
-        value = 0
-        for i in range(8):
-            value += mem.dmem[index+(8-i-1)] << 8*i
-        mem.regs[int(a1[1:])] = value
-    # elif op == "LDURB":
-    #     pass
-    # elif op == "LDURH":
-    #     pass
+        mem.regs[int(a1[1:])] = mem.dmem_read(mem.regs[int(a2[1:])], immu2int(a3), 8)
+    elif op == "LDURB":
+        mem.regs[int(a1[1:])] = mem.dmem_read(mem.regs[int(a2[1:])], immu2int(a3), 1)
+    elif op == "LDURH":
+        mem.regs[int(a1[1:])] = mem.dmem_read(mem.regs[int(a2[1:])], immu2int(a3), 2)
     # elif op == "LDURSW":
     #     pass
     # elif op == "LDXR":
@@ -97,17 +116,14 @@ def exec(mem, instr):
     elif op == "ORR":
         mem.regs[int(a1[1:])] = mem.regs[int(a2[1:])] | mem.regs[int(a3[1:])]
     elif op == "ORRI":
-        mem.regs[int(a1[1:])] = mem.regs[int(a2[1:])] | immu2int(a3[1:])
+        mem.regs[int(a1[1:])] = mem.regs[int(a2[1:])] | immu2int(a3)
 
     elif op == "STUR":
-        value = mem.regs[int(a1[1:])]
-        index = mem.regs[int(a2[1:])] + immu2int(a3)
-        for i in range(8):
-            mem.dmem[index+(8-i-1)] = (value >> 8*i) & (mem.memMod - 1)
-    # elif op == "STURB":
-    #     pass
-    # elif op == "STURH":
-    #     pass
+        mem.dmem_write(mem.regs[int(a1[1:])], mem.regs[int(a2[1:])], immu2int(a3), 8)
+    elif op == "STURB":
+        mem.dmem_write(mem.regs[int(a1[1:])], mem.regs[int(a2[1:])], immu2int(a3), 1)
+    elif op == "STURH":
+        mem.dmem_write(mem.regs[int(a1[1:])], mem.regs[int(a2[1:])], immu2int(a3), 2)
     # elif op == "STURSW":
     #     pass
     # elif op == "STXR":
@@ -122,9 +138,31 @@ def exec(mem, instr):
     elif op == "SUBIS":
         result = mem.regs[int(a1[1:])] = mem.regs[int(a2[1:])] - immu2int(a3)
 
-    elif op[0] == "F":
-        raise Exception("Floating point operations not supported")
+    # elif op == "FADDS":
+    #     pass
+    # elif op == "FADDD":
+    #     pass
+    # elif op == "FCMPS":
+    #     pass
+    # elif op == "FCMPD":
+    #     pass
+    # elif op == "FDIVS":
+    #     pass
+    # elif op == "FDIVD":
+    #     pass
+    # elif op == "FMULS":
+    #     pass
+    # elif op == "FMULD":
+    #     pass
+    # elif op == "FSUBS":
+    #     pass
+    # elif op == "FSUBD":
+    #     pass
 
+    # elif op == "LDURS":
+    #     pass
+    # elif op == "LDURD":
+    #     pass
     # elif op == "MUL":
     #     mem.regs[int(a1[1:])] = mem.regs[int(a2[1:])] * mem.regs[int(a3[1:])]
     # elif op == "SDIV":
@@ -139,7 +177,7 @@ def exec(mem, instr):
     elif op == "CMP":
         result = mem.regs[int(a2[1:])] - mem.regs[int(a3[1:])]
     elif op == "CMPI":
-        result = mem.regs[int(a2[1:])] - immu2int(a3[1:])
+        result = mem.regs[int(a2[1:])] - immu2int(a3)
     # elif op == "LDA":
     #     pass
     elif op == "MOV":

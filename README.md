@@ -50,7 +50,7 @@ The simulator can also be integrated into another Python program as a library.
 
 ### LEGv8 Harvard
 
-26/57 supported
+33/57 instructions supported
 
 - [x] ADD
 - [x] ADDI
@@ -63,9 +63,9 @@ The simulator can also be integrated into another Python program as a library.
 - [x] ANDIS
 
 - [x] B
-- [ ] B.COND
-- [ ] BL
-- [ ] BR
+- [X] B.COND
+- [X] BL
+- [X] BR
 - [x] CBNZ
 - [x] CBZ
 
@@ -73,8 +73,8 @@ The simulator can also be integrated into another Python program as a library.
 - [x] EORI
 
 - [x] LDUR
-- [ ] LDURB
-- [ ] LDURH
+- [X] LDURB
+- [X] LDURH
 - [ ] LDURSW
 - [ ] LDXR
 
@@ -88,8 +88,8 @@ The simulator can also be integrated into another Python program as a library.
 - [x] ORRI
 
 - [x] STUR
-- [ ] STURB
-- [ ] STURH
+- [X] STURB
+- [X] STURH
 - [ ] STURSW
 - [ ] STXR
 

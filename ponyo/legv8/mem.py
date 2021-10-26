@@ -33,6 +33,44 @@ class mem:
         for i in range(len(self.dmem)):
             self.dmem[i] = self.dmem[i] % self.memMod
 
+    def dmem_read(self, addr, offset, size):
+        index = addr + offset
+        value = 0
+        for i in range(size):
+            value += self.dmem[index+(i)] << 8*i
+        return value
+    
+    def dmem_write(self, value, addr, offset, size):
+        index = addr + offset
+        for i in range(size):
+            self.dmem[index+(i)] = (value >> 8*i) & (self.memMod - 1)
+
+    def regs_read(self, reg):
+        reg = reg.upper()
+        if   reg == "SP":
+            reg = "X28"
+        elif reg == "FP":
+            reg = "X29"
+        elif reg == "LR":
+            reg = "X30"
+        elif reg == "XZR":
+            reg = "X31"
+
+        return self.regs[int(reg[1:])]
+    
+    def regs_write(reg, value):
+        reg = reg.upper()
+        if   reg == "SP":
+            reg = "X28"
+        elif reg == "FP":
+            reg = "X29"
+        elif reg == "LR":
+            reg = "X30"
+        elif reg == "XZR":
+            reg = "X31"
+
+        self.regs[int(reg[1:])] = value % self.regsMod
+
 def printMem(mem):
     regs = mem.regs
     print(f'Registers:')
@@ -50,8 +88,10 @@ def printMem(mem):
     for i in range(length):
         i *= width
         memstr = ""
-        for j in range(width):
+        for j in range(width-1,-1,-1):
             memstr += f'{mem.dmem[i+j]:02x}'.replace('0','-')
-            if (j+1) % 4 == 0:
+            if (j) % 4 == 0:
                 memstr += " "
-        print(f' {i:3x}-{i+width-1:3x}: {memstr}')
+            if (j) % 8 == 0:
+                memstr += " "
+        print(f' {i+width-1:2x}-{i:2x}: {memstr}')

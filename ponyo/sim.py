@@ -35,12 +35,14 @@ class LEGv8_Sim:
             instr = decode(self.mem.pc, line, self.sym)
             self.mem = exec(self.mem, instr)
 
+            if '//$step' in line and self.debug:
+                self.step = True
             if '//$break' in line or self.step:
-                cmd = "stop"
-                while cmd != "":
-                    cmd = input(': ')
-                    if cmd == 'p':
-                        printMem(self.mem)
+                printMem(self.mem)
+                try:
+                    input(': ')
+                except:
+                    exit()
     
             self.mem.pc += 1 # increment PC at the end of the cycle
         
