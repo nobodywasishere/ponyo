@@ -1,5 +1,13 @@
 import re
 
+def findSymbols(imem):
+    sym = {}
+    for line_i, line in enumerate(imem):
+        op = line.strip().split(' ')[0]
+        if len(op) > 1 and op[-1] == ":":
+            sym[op[:-1]] = line_i
+    return sym
+
 # Decode an instruction into its component parts
 def decode(pc, assembly, sym):
     # Assumes assembly is correctly formatted

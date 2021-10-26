@@ -4,67 +4,63 @@ import os, sys
 import re
 import argparse
 
-from legv8.mem    import mem, printMem
-from legv8.exec   import exec
-from legv8.decode import decode
+from legv8 import mem    as legv8_mem
+from legv8 import exec   as legv8_exec
+from legv8 import decode as legv8_decode
 
-class LEGv8_Sim:
+class Simulator:
     # Turn on print debug statements
     debug = False
 
     # SymbolsSymSym
     sym = {}
 
-    def __init__(self, imem, dmem=[]):
-        self.mem = mem(dmem)
-        self.pmem = None
+    def __init__(self, mem, decode, exec, imem, dmem=[]):
+        self.mem = mem.mem(dmem)
+        if dmem != []: self.mem.dmem = dmem
+        self.printMem = mem.printMem
+        self.decode = decode.decode
+        self.findSymbols = decode.findSymbols
+        self.exec = exec.exec
         self.imem = imem
 
-    # Step through each line of assembly
-    #   Decode instruction
-    #   Execute instruction
+        self.sym = self.findSymbols(self.imem)
+
     def run(self):
-        self.findSymbols()
-        if self.debug:
-            print(self.sym)
         while self.mem.pc < len(self.imem):
-            line = self.imem[self.mem.pc]
+            self.step()
+
+            # Step through each line
             if self.debug:
-                print(f'{self.mem.pc:3d}: {line}')
-
-            instr = decode(self.mem.pc, line, self.sym)
-            self.mem = exec(self.mem, instr)
-
-            if '//$step' in line and self.debug:
-                self.step = True
-            if '//$break' in line or self.step:
-                printMem(self.mem)
-                try:
-                    input(': ')
-                except:
-                    exit()
-    
-            self.mem.pc += 1 # increment PC at the end of the cycle
+                self.printMem(self.mem)
+                input(': ')
         
-        printMem(self.mem)
-        # exit when program stops
-        return
+        # Print the memory contents at the end of execution
+        self.printMem(self.mem)
 
-    # Search assembly for symbols and return a dict of
-    #   their names and values
-    def findSymbols(self):
-        line_i = 0
-        for line in self.imem:
-            op = line.strip().split(' ')[0]
-            if len(op) > 1 and op[-1] == ":":
-                self.sym[op[:-1]] = line_i
-            line_i = line_i + 1
+    def step(self):
+        # Get the current instruction
+        line = self.imem[self.mem.pc]
+
+        # Print the instruction
+        if self.debug:
+            print(f'{self.mem.pc:3d}: {line}')
+
+        # Decode the instruction
+        instr = self.decode(self.mem.pc, line, self.sym)
+
+        # Execute the instruction
+        self.mem = self.exec(self.mem, instr)
+
+        # increment PC at the end of the cycle
+        self.mem.pc += 1 
         
 
 parser = argparse.ArgumentParser()
 parser.add_argument('-f', '--asm', help="Assembly file",
     required=True)
 parser.add_argument('-d', '--mem', help="Data memory file")
+parser.add_argument('--isa', default="legv8", help="ISA of assembly file")
 parser.add_argument('--debug', action="store_true", default=False)
 parser.add_argument('--step', action="store_true", default=False)
 
@@ -77,9 +73,16 @@ if __name__=="__main__":
         dmem = open(args.mem).read().splitlines()
     else:
         dmem = []
-    cpu = LEGv8_Sim(imem, dmem)
+
+    if args.isa == "legv8":
+        mem = legv8_mem
+        decode = legv8_decode
+        exec = legv8_exec
+    else:
+        raise Exception(f'{args.isa} is not a valid ISA!')
+
+    cpu = Simulator(mem, decode, exec, imem, dmem)
 
     cpu.debug = args.debug
-    cpu.step  = args.step
 
     cpu.run()
