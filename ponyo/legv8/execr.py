@@ -9,7 +9,7 @@ def immu2int(immu):
     else:
         return int(immu)
 
-def exec(mem, instr):
+def execr(mem, instr):
 
     # | type | op     | a1   | a2   | a3   | a4    |
     # |------|--------|------|------|------|-------|
@@ -184,7 +184,7 @@ def exec(mem, instr):
         mem.regs[int(a1[1:])] = mem.regs[int(a2[1:])]
 
     else:
-        raise Exception(f"Instruction '{op}' is not supported (yet)")
+        raise Exception(f"Instruction {op} is not supported (yet)")
 
     # Only true for instructions that set flags
     if result is not None:

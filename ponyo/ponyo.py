@@ -5,7 +5,7 @@ import re
 import argparse
 
 from legv8 import mem    as legv8_mem
-from legv8 import exec   as legv8_exec
+from legv8 import execr  as legv8_execr
 from legv8 import decode as legv8_decode
 
 class Simulator:
@@ -15,12 +15,12 @@ class Simulator:
     # SymbolsSymSym
     sym = {}
 
-    def __init__(self, mem, decode, exec, imem, dmem=[]):
+    def __init__(self, mem, decode, execr, imem, dmem=[]):
         self.mem = mem.mem(dmem)
         if dmem != []: self.mem.dmem = dmem
         self.printMem = mem.printMem
         self.decode = decode.decode
-        self.exec = exec.exec
+        self.execr = execr.execr
         self.imem = imem
         self.imem_raw = imem[:]
 
@@ -50,7 +50,7 @@ class Simulator:
             print(f'{self.mem.pc:3d}: {self.imem_raw[self.mem.pc]}')
 
         # Execute the instruction
-        self.exec(self.mem, instr)
+        self.execr(self.mem, instr)
 
         # increment PC at the end of the cycle
         self.mem.pc += 1 
@@ -77,11 +77,11 @@ if __name__=="__main__":
     if args.isa == "legv8":
         mem = legv8_mem
         decode = legv8_decode
-        exec = legv8_exec
+        execr = legv8_execr
     else:
         raise Exception(f'{args.isa} is not a valid ISA!')
 
-    cpu = Simulator(mem, decode, exec, imem, dmem)
+    cpu = Simulator(mem, decode, execr, imem, dmem)
 
     cpu.debug = args.debug
 
