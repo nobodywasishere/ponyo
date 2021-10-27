@@ -51,6 +51,9 @@ def decode(pc, assembly, sym):
         match = matched_symbols.group()
         assembly = assembly.replace(match, str(sym[match[1:]]-pc))
 
+    assembly = assembly.replace('SP', 'X28')
+    assembly = assembly.replace('FP', 'X29')
+    assembly = assembly.replace('LR', 'X30')
     assembly = assembly.replace('XZR', 'X31')
 
     # Remove duplicate spaces and tabs (again)

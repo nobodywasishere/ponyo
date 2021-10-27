@@ -20,11 +20,14 @@ class Simulator:
         if dmem != []: self.mem.dmem = dmem
         self.printMem = mem.printMem
         self.decode = decode.decode
-        self.findSymbols = decode.findSymbols
         self.exec = exec.exec
         self.imem = imem
+        self.imem_raw = imem[:]
 
-        self.sym = self.findSymbols(self.imem)
+        sym = decode.findSymbols(imem)
+
+        for line_i in range(len(imem)):
+            self.imem[line_i] = decode.decode(line_i, imem[line_i], sym)
 
     def run(self):
         while self.mem.pc < len(self.imem):
@@ -40,17 +43,14 @@ class Simulator:
 
     def step(self):
         # Get the current instruction
-        line = self.imem[self.mem.pc]
+        instr = self.imem[self.mem.pc]
 
         # Print the instruction
         if self.debug:
-            print(f'{self.mem.pc:3d}: {line}')
-
-        # Decode the instruction
-        instr = self.decode(self.mem.pc, line, self.sym)
+            print(f'{self.mem.pc:3d}: {self.imem_raw[self.mem.pc]}')
 
         # Execute the instruction
-        self.mem = self.exec(self.mem, instr)
+        self.exec(self.mem, instr)
 
         # increment PC at the end of the cycle
         self.mem.pc += 1 
