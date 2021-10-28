@@ -91,11 +91,8 @@ if __name__=="__main__":
 
     if args.tui:
         pass
-        root = py_cui.PyCUI(7, 6)
-        # root.toggle_unicode_borders()
-        root.set_title('CUI TODO List')
-        s = SimulatorTUI(root)
-        root.start()
+        print('TUI not implemented')
+        exit(1)
     else:
         cpu.debug = args.debug
         time_exec_start = time.time()

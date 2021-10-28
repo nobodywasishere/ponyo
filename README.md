@@ -1,6 +1,7 @@
 # ponyo
 
-Ponyo is a (work-in-progress) CPU simulator currently supporting (some of) LEGv8.
+Ponyo is a (work-in-progress) ISA simulator currently supporting (some of) LEGv8.
+It also aims to be a framework for implementing simulators for any number of ISAs.
 
 ## Simulator
 
@@ -17,10 +18,12 @@ CLI for interacting with simulator. If no data memory is provided,
 a default of 256 bytes of zeros will be created.
 
 ```
-$ ./ponyo/sim.py -f assembly_code.asm -d data_mem.hex
+$ ./ponyo/ponyo.py -f assembly_code.asm
 ```
 
-### TUI
+Set breakpoints in the assembly by adding `//$break` on any given line.
+
+<!-- ### TUI
 
 TODO/CONCEPT
 
@@ -44,7 +47,7 @@ Optional TUI for interacting with simulator. Has a handful of components.
 
 TODO/CONCEPT
 
-The simulator can also be integrated into another Python program as a library.
+The simulator can also be integrated into another Python program as a library. -->
 
 ## Supported Architectures
 
@@ -121,7 +124,3 @@ The simulator can also be integrated into another Python program as a library.
 - [x] CMPI
 - [ ] LDA
 - [x] MOV
-
-### RISC-V
-
-TODO
