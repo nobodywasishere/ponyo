@@ -23,16 +23,6 @@ class mem:
         self.regsNum = regsNum
         self.regs = [0 for _ in range(regsNum)]
 
-    # run once a cycle to clean up register values
-    def clean(self):
-        for i in range(self.regsNum):
-            self.regs[i] = self.regs[i] % 2**self.regsMod
-
-        self.regs[31] = 0
-
-        for i in range(len(self.dmem)):
-            self.dmem[i] = self.dmem[i] % self.memMod
-
     def dmem_read(self, addr, offset, size):
         index = addr + offset
         value = 0
@@ -46,52 +36,32 @@ class mem:
             self.dmem[index+(i)] = (value >> 8*i) & (self.memMod - 1)
 
     def regs_read(self, reg):
-        reg = reg.upper()
-        if   reg == "SP":
-            reg = "X28"
-        elif reg == "FP":
-            reg = "X29"
-        elif reg == "LR":
-            reg = "X30"
-        elif reg == "XZR":
-            reg = "X31"
-
         return self.regs[int(reg[1:])]
     
-    def regs_write(reg, value):
-        reg = reg.upper()
-        if   reg == "SP":
-            reg = "X28"
-        elif reg == "FP":
-            reg = "X29"
-        elif reg == "LR":
-            reg = "X30"
-        elif reg == "XZR":
-            reg = "X31"
+    def regs_write(self, reg, value):
+        self.regs[int(reg[1:])] = value % 2**self.regsMod
 
-        self.regs[int(reg[1:])] = value % self.regsMod
+    def print(self):
+        regs = self.regs
+        print(f'Registers:')
+        for i in range(8):
+            i *= 4
+            regstr = ""
+            for j in range(4):
+                regstr += f' X{i+j:2}: ' + f'{regs[i+j]:016x}'[:8].replace('0','-') + \
+                    " " + f'{regs[i+j]:016x}'[8:].replace('0','-')
+            print(regstr)
 
-def printMem(mem):
-    regs = mem.regs
-    print(f'Registers:')
-    for i in range(8):
-        i *= 4
-        regstr = ""
-        for j in range(4):
-            regstr += f' X{i+j:2}: ' + f'{regs[i+j]:016x}'[:8].replace('0','-') + \
-                " " + f'{regs[i+j]:016x}'[8:].replace('0','-')
-        print(regstr)
-
-    print(f'Memory: ')
-    width = 32
-    length = int(len(mem.dmem)/width)
-    for i in range(length):
-        i *= width
-        memstr = ""
-        for j in range(width-1,-1,-1):
-            memstr += f'{mem.dmem[i+j]:02x}'.replace('0','-')
-            if (j) % 4 == 0:
-                memstr += " "
-            if (j) % 8 == 0:
-                memstr += " "
-        print(f' {i+width-1:2x}-{i:2x}: {memstr}')
+        print(f'Memory: ')
+        width = 32
+        length = int(len(self.dmem)/width)
+        for i in range(length):
+            i *= width
+            memstr = ""
+            for j in range(width-1,-1,-1):
+                memstr += f'{self.dmem[i+j]:02x}'.replace('0','-')
+                if (j) % 4 == 0:
+                    memstr += " "
+                if (j) % 8 == 0:
+                    memstr += " "
+            print(f' {i+width-1:2x}-{i:2x}: {memstr}')
