@@ -62,7 +62,7 @@ def decode(pc, assembly, sym):
     # Split into list
     assembly = assembly.split(' ')
 
-    if len(assembly) > 0: instr['op'] = assembly[0]
+    if len(assembly) > 0: instr['op'] = assembly[0].upper()
     if len(assembly) > 1: instr['a1'] = assembly[1]
     if len(assembly) > 2: instr['a2'] = assembly[2]
     if len(assembly) > 3: instr['a3'] = assembly[3]

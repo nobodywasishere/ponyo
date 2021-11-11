@@ -20,7 +20,7 @@ def execr(mem, instr):
     # | CB   | opcode | Rt   | Addr | -    | -     |
     # | IW   | opcode | Rd   | Imm  | -    | -     |
 
-    op = instr['op'].upper()
+    op = instr['op']
     a1 = instr['a1']
     a2 = instr['a2']
     a3 = instr['a3']
