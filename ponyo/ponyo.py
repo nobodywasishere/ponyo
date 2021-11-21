@@ -37,7 +37,7 @@ class Simulator:
 
             # Step through each line
             if self.debug:
-                self.printMem(self.mem)
+                self.mem.print()
                 input(': ')
         
         # Print the memory contents at the end of execution
