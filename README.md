@@ -1,5 +1,7 @@
 # ponyo
 
+![](./docs/fish-bowl.svg)
+
 Ponyo is a (work-in-progress) ISA simulator currently supporting (some of) LEGv8.
 It also aims to be a framework for implementing simulators for any number of ISAs.
 
@@ -124,3 +126,6 @@ The simulator can also be integrated into another Python program as a library. -
 - [x] CMPI
 - [ ] LDA
 - [x] MOV
+
+<br>
+<a href="https://www.flaticon.com/free-icons/fishbowl" title="fishbowl icons">Fishbowl icon created by Becris - Flaticon</a>
