@@ -3,3 +3,4 @@ asm
 *.pyc
 site
 build
+docs/docs

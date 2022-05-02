@@ -8,29 +8,15 @@
 
 
 
----
-
-<a href="https://github.com/nobodywasishere/ponyo/blob/master/ponyo/ponyo.py#L94"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
-
-## <kbd>function</kbd> `main`
-
-```python
-main()
-```
-
-
-
-
-
 
 ---
 
-<a href="https://github.com/nobodywasishere/ponyo/blob/master/ponyo/ponyo.py#L21"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="https://github.com/nobodywasishere/ponyo/blob/master/ponyo/ponyo.py#L30"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>class</kbd> `Simulator`
 ISA Simulator 
 
-<a href="https://github.com/nobodywasishere/ponyo/blob/master/ponyo/ponyo.py#L30"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="https://github.com/nobodywasishere/ponyo/blob/master/ponyo/ponyo.py#L39"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>method</kbd> `__init__`
 
@@ -55,7 +41,7 @@ Initializes simulator
 
 ---
 
-<a href="https://github.com/nobodywasishere/ponyo/blob/master/ponyo/ponyo.py#L55"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="https://github.com/nobodywasishere/ponyo/blob/master/ponyo/ponyo.py#L64"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>method</kbd> `run`
 
@@ -67,7 +53,7 @@ Step through the code until it reaches the end
 
 ---
 
-<a href="https://github.com/nobodywasishere/ponyo/blob/master/ponyo/ponyo.py#L68"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="https://github.com/nobodywasishere/ponyo/blob/master/ponyo/ponyo.py#L82"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>method</kbd> `step`
 

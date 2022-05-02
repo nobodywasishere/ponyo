@@ -18,14 +18,40 @@ It also aims to be a framework for implementing simulators for any number of ISA
 
 ### CLI
 
-CLI for interacting with simulator. If no data memory is provided, 
-a default of 256 bytes of zeros will be created.
+```
+usage: ponyo [-h] -f ASM [-d MEM] [--isa ISA] [--debug] [--gui]
+
+options:
+  -h, --help         show this help message and exit
+  -f ASM, --asm ASM  Assembly file
+  -d MEM, --mem MEM  Data memory file
+  --isa ISA          ISA of assembly file
+  --debug
+  --gui
+```
+
+Execute directly:
 
 ```
-$ ./ponyo/ponyo.py -f assembly_code.asm
+$ ./ponyo/ponyo.py -f examples/legv8/fib.asm --debug
+```
+
+Install using pip:
+```
+$ git clone https://github.com/nobodywasishere/ponyo
+$ cd ponyo
+$ pip install .
+...
+$ ponyo -f examples/legv8/fib.asm --gui
 ```
 
 Set breakpoints in the assembly by adding `//$break` on any given line.
+
+### GUI
+
+Simply run `ponyo` with the `--gui` flag and the assembly file you wish to run.
+
+![](./docs/ponyo-gui.png)
 
 <!-- ### TUI
 
@@ -53,81 +79,39 @@ TODO/CONCEPT
 
 The simulator can also be integrated into another Python program as a library. -->
 
+<br><hr><br>
+
 ## Supported Architectures
 
 ### LEGv8 Harvard
 
 33/57 instructions supported
 
-- [x] ADD
-- [x] ADDI
-- [x] ADDS
-- [x] ADDIS
+- [x] ADD, ADDI, ADDS, ADDIS
+- [x] AND, ANDI, ANDS, ANDIS
+- [x] B, B.COND, BL, BR, CBNZ, CBZ
+- [x] EOR, EORI
+- [x] LDUR, LDURB, LDURH
+- [ ] LDURSW, LDXR
+- [x] LSL, LSR
+- [ ] MOVK, MOVZ
+- [x] ORR, ORRI
+- [x] STUR, STURB, STURH
+- [ ] STURSW, STXR
 
-- [x] AND
-- [x] ANDI
-- [x] ANDS
-- [x] ANDIS
+- [x] SUB, SUBI, SUBS, SUBIS
 
-- [x] B
-- [X] B.COND
-- [X] BL
-- [X] BR
-- [x] CBNZ
-- [x] CBZ
+- [ ] FADDS, FADDD, FCMPS, FCMPD, FDIVS, FDIVD, FMULS, FMULD, FSUBS, FSUBD
 
-- [x] EOR
-- [x] EORI
+- [ ] LDURS, LDURD, MUL, SDIV, SMULH, UDIV, UMULH
 
-- [x] LDUR
-- [X] LDURB
-- [X] LDURH
-- [ ] LDURSW
-- [ ] LDXR
-
-- [x] LSL
-- [x] LSR
-
-- [ ] MOVK
-- [ ] MOVZ
-
-- [x] ORR
-- [x] ORRI
-
-- [x] STUR
-- [X] STURB
-- [X] STURH
-- [ ] STURSW
-- [ ] STXR
-
-- [x] SUB
-- [x] SUBI
-- [x] SUBS
-- [x] SUBIS
-
-- [ ] FADDS
-- [ ] FADDD
-- [ ] FCMPS
-- [ ] FCMPD
-- [ ] FDIVS
-- [ ] FDIVD
-- [ ] FMULS
-- [ ] FMULD
-- [ ] FSUBS
-- [ ] FSUBD
-
-- [ ] LDURS
-- [ ] LDURD
-- [ ] MUL
-- [ ] SDIV
-- [ ] SMULH
-- [ ] UDIV
-- [ ] UMULH
-
-- [x] CMP
-- [x] CMPI
+- [x] CMP, CMPI, MOV
 - [ ] LDA
-- [x] MOV
 
-<br>
+### [EccCPU](https://blog.eowyn.net/EccCPU/)
+
+13/13 instructions supported
+
+
+<br><hr><br>
 <a href="https://www.flaticon.com/free-icons/fishbowl" title="fishbowl icons">Fishbowl icon created by Becris - Flaticon</a>

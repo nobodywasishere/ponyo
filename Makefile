@@ -2,6 +2,9 @@ install:
 	python3 -m pip install .
 
 docs:
+	mkdir -p docs/docs
+	cp docs/*.svg docs/docs
+	cp docs/*.png docs/docs
 	lazydocs \
 		--output-path="./docs/docstrings" \
 		--overview-file="README.md" \

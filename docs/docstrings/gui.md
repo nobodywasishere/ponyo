@@ -15,7 +15,7 @@
 
 ---
 
-<a href="https://github.com/nobodywasishere/ponyo/blob/master/ponyo/gui.py#L78"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="https://github.com/nobodywasishere/ponyo/blob/master/ponyo/gui.py#L88"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>function</kbd> `currCode`
 
@@ -42,12 +42,12 @@ String showing surrounding code to PC
 
 ---
 
-<a href="https://github.com/nobodywasishere/ponyo/blob/master/ponyo/gui.py#L106"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="https://github.com/nobodywasishere/ponyo/blob/master/ponyo/gui.py#L116"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>function</kbd> `gui`
 
 ```python
-gui(sim)
+gui(sim, isa)
 ```
 
 Runs an interactive GUI for the simulator using PySimpleGUIQt 
