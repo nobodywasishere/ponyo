@@ -15,6 +15,16 @@ layout = [
         sg.Button("Step", size=button_size),
         sg.Button("Run", size=button_size),
         sg.Stretch(),
+        sg.Text("Speed: 200 ", font=font, key="speedText"),
+        sg.Slider(
+            range=(0, 500),
+            default_value=200,
+            size=(1, 0.15),
+            orientation="horizontal",
+            font=font,
+            key="timeoutSlider",
+        ),
+        sg.Stretch(),
     ],
     [
         sg.Stretch(),
@@ -116,9 +126,14 @@ def gui(sim):
     run = False
     end_code = False
     prev_sims = []
+    timeout = 200
     while sim.mem.pc < sim.imem_len or end_code:
 
-        event, _ = window.read(timeout=150)
+        event, values = window.read(timeout=timeout)
+
+        if "timeoutSlider" in values:
+            timeout = values["timeoutSlider"]
+            window["speedText"].update(value=f"Speed: {timeout} ")
 
         if event == sg.WIN_CLOSED:
             break
@@ -136,6 +151,10 @@ def gui(sim):
             prev_sims.append(dpcp(sim.mem))
             if len(prev_sims) > 100:
                 prev_sims = prev_sims[1:]
+
+        if run and not end_code:
+            if "//$break" in sim.imem_raw[sim.mem.pc]:
+                run = False
 
         window["codePane"].update(value=currCode(sim, -16, 16))
         window["memPane"].update(value=sim.mem.mem2str())

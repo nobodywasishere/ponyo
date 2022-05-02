@@ -61,6 +61,11 @@ class Simulator:
             if self.debug:
                 self.mem.print()
                 input(": ")
+            elif (self.mem.pc < self.imem_len) and (
+                "//$break" in self.imem_raw[self.mem.pc]
+            ):
+                self.mem.print()
+                input(": ")
 
         # Print the memory contents at the end of execution
         self.mem.print()
@@ -91,7 +96,7 @@ parser.add_argument("--debug", action="store_true", default=False)
 parser.add_argument("--gui", action="store_true", default=False)
 
 
-def main():
+def _main():
     args = parser.parse_args()
 
     imem = open(args.asm).read().splitlines()
@@ -127,4 +132,4 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    _main()

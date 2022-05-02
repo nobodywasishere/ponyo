@@ -27,7 +27,7 @@ classifiers = [
 Home = "https://github.com/nobodywasishere/ponyo"
 
 [project.scripts]
-ponyo = "ponyo:ponyo.main"
+ponyo = "ponyo:ponyo._main"
 
 [build-system]
 requires = ["flit_core >=3.2,<4"]
