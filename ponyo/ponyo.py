@@ -5,6 +5,11 @@ import time
 import re
 import argparse
 
+try:
+    from gui import gui
+except ImportError:
+    from .gui import gui
+
 from legv8 import mem    as legv8_mem
 from legv8 import execr  as legv8_execr
 from legv8 import decode as legv8_decode
@@ -65,8 +70,7 @@ parser.add_argument('-f', '--asm', help="Assembly file",
 parser.add_argument('-d', '--mem', help="Data memory file")
 parser.add_argument('--isa', default="legv8", help="ISA of assembly file")
 parser.add_argument('--debug', action="store_true", default=False)
-parser.add_argument('--perf', action="store_true", default=False)
-parser.add_argument('--tui', action="store_true", default=False)
+parser.add_argument('--gui', action="store_true", default=False)
 
 if __name__=="__main__":
 
@@ -89,10 +93,8 @@ if __name__=="__main__":
     cpu = Simulator(mem, decode, execr, imem, dmem)
     time_decode_end = time.time()
 
-    if args.tui:
-        pass
-        print('TUI not implemented')
-        exit(1)
+    if args.gui:
+        gui(cpu)
     else:
         cpu.debug = args.debug
         time_exec_start = time.time()
