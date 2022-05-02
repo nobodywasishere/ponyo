@@ -17,6 +17,15 @@ except ImportError:
     from .legv8 import execr as legv8_execr
     from .legv8 import decode as legv8_decode
 
+try:
+    from ecccpu import mem as ecccpu_mem
+    from ecccpu import execr as ecccpu_execr
+    from ecccpu import decode as ecccpu_decode
+except ImportError:
+    from .ecccpu import mem as ecccpu_mem
+    from .ecccpu import execr as ecccpu_execr
+    from .ecccpu import decode as ecccpu_decode
+
 
 class Simulator:
     """ISA Simulator"""
@@ -109,6 +118,10 @@ def _main():
         mem = legv8_mem
         decode = legv8_decode
         execr = legv8_execr
+    elif args.isa == "ecccpu":
+        mem = ecccpu_mem
+        decode = ecccpu_decode
+        execr = ecccpu_execr
     else:
         raise Exception(f"{args.isa} is not a valid ISA!")
 
@@ -117,7 +130,7 @@ def _main():
     # time_decode_end = time.time()
 
     if args.gui:
-        gui(cpu)
+        gui(cpu, args.isa)
     else:
         cpu.debug = args.debug
         # time_exec_start = time.time()

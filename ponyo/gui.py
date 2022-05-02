@@ -105,7 +105,7 @@ def currCode(sim, low: int = -5, high: int = 5) -> str:
             continue
 
         if i == pc:
-            prefix = "--> | "
+            prefix = f"{i:3}>>>"
         else:
             prefix = f"{i:3} | "
 
@@ -113,7 +113,7 @@ def currCode(sim, low: int = -5, high: int = 5) -> str:
     return "\n".join(out)
 
 
-def gui(sim):
+def gui(sim, isa):
     """Runs an interactive GUI for the simulator using PySimpleGUIQt
 
     Args:
@@ -121,7 +121,7 @@ def gui(sim):
     """
 
     # Create the Window
-    window = sg.Window("Ponyo - ISA Simulator", layout)
+    window = sg.Window(f"Ponyo - ISA Simulator ({isa} mode)", layout)
     # Event Loop to process "events"
     run = False
     end_code = False
@@ -133,7 +133,7 @@ def gui(sim):
 
         if "timeoutSlider" in values:
             timeout = values["timeoutSlider"]
-            window["speedText"].update(value=f"Speed: {timeout} ")
+            window["speedText"].update(value=f"Speed: {timeout/1000:1.3f} ")
 
         if event == sg.WIN_CLOSED:
             break
