@@ -8,9 +8,14 @@ try:
 except ImportError:
     from .gui import gui
 
-from legv8 import mem    as legv8_mem
-from legv8 import execr  as legv8_execr
-from legv8 import decode as legv8_decode
+try:
+    from legv8 import mem    as legv8_mem
+    from legv8 import execr  as legv8_execr
+    from legv8 import decode as legv8_decode
+except ImportError:
+    from .legv8 import mem as legv8_mem
+    from .legv8 import execr  as legv8_execr
+    from .legv8 import decode as legv8_decode
 
 class Simulator:
     """ISA Simulator
@@ -86,8 +91,7 @@ parser.add_argument('--debug', action="store_true", default=False)
 # parser.add_argument('--perf', action="store_true", default=False)
 parser.add_argument('--gui', action="store_true", default=False)
 
-if __name__=="__main__":
-
+def main():
     args = parser.parse_args()
 
     imem = open(args.asm).read().splitlines()
@@ -120,3 +124,6 @@ if __name__=="__main__":
     #     print(f'Exec time:   {time_exec_end - time_exec_start:f}s')
     #     print(f'Instr count: {cpu.icount}')
     #     print(f'Instr/sec:   {int(cpu.icount/(time_exec_end - time_exec_start))}')
+
+if __name__ == "__main__":
+    main()
