@@ -9,17 +9,18 @@ except ImportError:
     from .gui import gui
 
 try:
-    from legv8 import mem    as legv8_mem
-    from legv8 import execr  as legv8_execr
+    from legv8 import mem as legv8_mem
+    from legv8 import execr as legv8_execr
     from legv8 import decode as legv8_decode
 except ImportError:
     from .legv8 import mem as legv8_mem
-    from .legv8 import execr  as legv8_execr
+    from .legv8 import execr as legv8_execr
     from .legv8 import decode as legv8_decode
 
+
 class Simulator:
-    """ISA Simulator
-    """
+    """ISA Simulator"""
+
     # Turn on print debug statements
     debug = False
 
@@ -37,7 +38,8 @@ class Simulator:
             dmem (list, optional): Initial data memory. Defaults to [].
         """
         self.mem = mem.mem(dmem)
-        if dmem != []: self.mem.dmem = dmem
+        if dmem != []:
+            self.mem.dmem = dmem
         self.decode = decode.decode
         self.execr = execr.execr
         self.imem = imem
@@ -51,45 +53,43 @@ class Simulator:
             self.imem[line_i] = decode.decode(line_i, imem[line_i], sym)
 
     def run(self):
-        """Step through the code until it reaches the end
-        """
+        """Step through the code until it reaches the end"""
         while self.mem.pc < self.imem_len:
             self.step()
 
             # Step through each line
             if self.debug:
                 self.mem.print()
-                input(': ')
-        
+                input(": ")
+
         # Print the memory contents at the end of execution
         self.mem.print()
 
     def step(self):
-        """Execute a single instruction
-        """
+        """Execute a single instruction"""
         # Get the current instruction
         instr = self.imem[self.mem.pc]
 
         # Print the instruction
         if self.debug:
-            print(f'{self.mem.pc:3d}: {self.imem_raw[self.mem.pc]}')
+            print(f"{self.mem.pc:3d}: {self.imem_raw[self.mem.pc]}")
 
         # Execute the instruction
         self.execr(self.mem, instr)
 
         # increment PC at the end of the cycle
-        self.mem.pc += 1 
+        self.mem.pc += 1
         self.icount += 1
 
 
 parser = argparse.ArgumentParser()
-parser.add_argument('-f', '--asm', help="Assembly file",
-    required=True)
-parser.add_argument('-d', '--mem', help="Data memory file")
-parser.add_argument('--isa', default="legv8", help="ISA of assembly file")
-parser.add_argument('--debug', action="store_true", default=False)
+parser.add_argument("-f", "--asm", help="Assembly file", required=True)
+parser.add_argument("-d", "--mem", help="Data memory file")
+parser.add_argument("--isa", default="legv8", help="ISA of assembly file")
+parser.add_argument("--debug", action="store_true", default=False)
 # parser.add_argument('--perf', action="store_true", default=False)
-parser.add_argument('--gui', action="store_true", default=False)
+parser.add_argument("--gui", action="store_true", default=False)
+
 
 def main():
     args = parser.parse_args()
@@ -105,7 +105,7 @@ def main():
         decode = legv8_decode
         execr = legv8_execr
     else:
-        raise Exception(f'{args.isa} is not a valid ISA!')
+        raise Exception(f"{args.isa} is not a valid ISA!")
 
     # time_decode_start = time.time()
     cpu = Simulator(mem, decode, execr, imem, dmem)
@@ -124,6 +124,7 @@ def main():
     #     print(f'Exec time:   {time_exec_end - time_exec_start:f}s')
     #     print(f'Instr count: {cpu.icount}')
     #     print(f'Instr/sec:   {int(cpu.icount/(time_exec_end - time_exec_start))}')
+
 
 if __name__ == "__main__":
     main()

@@ -2,6 +2,8 @@
 
 ![](./docs/fish-bowl.svg)
 
+![](./docs/badge.svg)
+
 Ponyo is a (work-in-progress) ISA simulator currently supporting (some of) LEGv8.
 It also aims to be a framework for implementing simulators for any number of ISAs.
 

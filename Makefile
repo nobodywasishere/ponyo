@@ -18,6 +18,7 @@ format:
 		--skip-init \
 		--skip-private \
 		--skip-class-def \
+		--skip-file-doc \
 		-b docs/badge.svg \
 		ponyo/
 

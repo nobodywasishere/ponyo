@@ -1,4 +1,3 @@
-
 def immu2int(immu: str) -> int:
     """Converts an immediate value into an integer
 
@@ -16,6 +15,7 @@ def immu2int(immu: str) -> int:
         return int(immu[1:], 2)
     else:
         return int(immu)
+
 
 def execr(mem, instr: dict[str, str]):
     """Executes the instruction on the simulator state for the LEGv8 ISA
@@ -37,14 +37,14 @@ def execr(mem, instr: dict[str, str]):
     # | CB   | opcode | Rt   | Addr | -    | -     |
     # | IW   | opcode | Rd   | Imm  | -    | -     |
 
-    op = instr['op']
-    a1 = instr['a1']
-    a2 = instr['a2']
-    a3 = instr['a3']
-    a4 = instr['a4']
+    op = instr["op"]
+    a1 = instr["a1"]
+    a2 = instr["a2"]
+    a3 = instr["a3"]
+    a4 = instr["a4"]
     result = None
 
-    if   op == "" or op == "NOP" or op == "NOOP":
+    if op == "" or op == "NOP" or op == "NOOP":
         pass
 
     elif op == "ADD":
@@ -52,48 +52,52 @@ def execr(mem, instr: dict[str, str]):
     elif op == "ADDI":
         mem.regs_write(a1, mem.regs_read(a2) + immu2int(a3))
     elif op == "ADDS":
-        mem.regs_write(a1, result = mem.regs_read(a2) + mem.regs_read(a3))
+        mem.regs_write(a1, result=mem.regs_read(a2) + mem.regs_read(a3))
     elif op == "ADDIS":
-        mem.regs_write(a1, result = mem.regs_read(a2) + immu2int(a3))
+        mem.regs_write(a1, result=mem.regs_read(a2) + immu2int(a3))
 
     elif op == "AND":
         mem.regs_write(a1, mem.regs_read(a2) & mem.regs_read(a3))
     elif op == "ANDI":
         mem.regs_write(a1, mem.regs_read(a2) & immu2int(a3))
     elif op == "ANDS":
-        mem.regs_write(a1, result = mem.regs_read(a2) & mem.regs_read(a3))
+        mem.regs_write(a1, result=mem.regs_read(a2) & mem.regs_read(a3))
     elif op == "ANDIS":
-        mem.regs_write(a1, result = mem.regs_read(a2) & immu2int(a3))
+        mem.regs_write(a1, result=mem.regs_read(a2) & immu2int(a3))
 
     elif op == "B":
         mem.pc += immu2int(a1) - 1
     elif op[:2] == "B.":
         cond = op[2:]
         branch = False
-        if   cond == "EQ" and mem.flags['Z'] == 1:
+        if cond == "EQ" and mem.flags["Z"] == 1:
             branch = True
-        elif cond == "NE" and mem.flags['Z'] == 0:
+        elif cond == "NE" and mem.flags["Z"] == 0:
             branch = True
-        elif cond == "LT" and mem.flags['N'] != mem.flags['V']:
+        elif cond == "LT" and mem.flags["N"] != mem.flags["V"]:
             branch = True
-        elif cond == "LE" and not (mem.flags['Z'] == 0 and mem.flags['N'] == mem.flags['V']):
+        elif cond == "LE" and not (
+            mem.flags["Z"] == 0 and mem.flags["N"] == mem.flags["V"]
+        ):
             branch = True
-        elif cond == "GT" and (mem.flags['Z'] == 0 and mem.flags['N'] == mem.flags['V']):
+        elif cond == "GT" and (
+            mem.flags["Z"] == 0 and mem.flags["N"] == mem.flags["V"]
+        ):
             branch = True
-        elif cond == "GE" and mem.flags['N'] == mem.flags['V']:
+        elif cond == "GE" and mem.flags["N"] == mem.flags["V"]:
             branch = True
-        elif cond == "LO" and mem.flags['C'] == 0:
+        elif cond == "LO" and mem.flags["C"] == 0:
             branch = True
-        elif cond == "LS" and not (mem.flags['Z'] == 0 and mem.flags['C'] == 1):
+        elif cond == "LS" and not (mem.flags["Z"] == 0 and mem.flags["C"] == 1):
             branch = True
-        elif cond == "HI" and (mem.flags['Z'] == 0 and mem.flags['C'] == 1):
+        elif cond == "HI" and (mem.flags["Z"] == 0 and mem.flags["C"] == 1):
             branch = True
-        elif cond == "HS" and mem.flags['C'] == 1:
+        elif cond == "HS" and mem.flags["C"] == 1:
             branch = True
         if branch:
             mem.pc += immu2int(a1) - 1
     elif op == "BL":
-        mem.regs_write('X30', mem.pc + 1)
+        mem.regs_write("X30", mem.pc + 1)
         mem.pc += immu2int(a1) - 1
     elif op == "BR":
         mem.pc = mem.regs_read(a1) - 1
@@ -103,7 +107,7 @@ def execr(mem, instr: dict[str, str]):
     elif op == "CBZ":
         if mem.regs_read(a1) == 0:
             mem.pc += immu2int(a2) - 1
-    
+
     elif op == "EOR":
         mem.regs_write(a1, mem.regs_read(a2) ^ mem.regs_read(a3))
     elif op == "EORI":
@@ -151,9 +155,9 @@ def execr(mem, instr: dict[str, str]):
     elif op == "SUBI":
         mem.regs_write(a1, mem.regs_read(a2) - immu2int(a3))
     elif op == "SUBS":
-        mem.regs_write(a1, result = mem.regs_read(a2) - mem.regs_read(a3))
+        mem.regs_write(a1, result=mem.regs_read(a2) - mem.regs_read(a3))
     elif op == "SUBIS":
-        mem.regs_write(a1, result = mem.regs_read(a2) - immu2int(a3))
+        mem.regs_write(a1, result=mem.regs_read(a2) - immu2int(a3))
 
     # elif op == "FADDS":
     #     pass
@@ -207,21 +211,21 @@ def execr(mem, instr: dict[str, str]):
     if result is not None:
         # Zero
         if result == 0:
-            mem.flags['Z'] = 1
+            mem.flags["Z"] = 1
         else:
-            mem.flags['Z'] = 0
+            mem.flags["Z"] = 0
 
         # Negative
-        if (result % 2**mem.REGS_MOD) >= 2**(mem.REGS_MOD - 1):
-            mem.flags['N'] = 1
+        if (result % 2**mem.REGS_MOD) >= 2 ** (mem.REGS_MOD - 1):
+            mem.flags["N"] = 1
         else:
-            mem.flags['N'] = 0
+            mem.flags["N"] = 0
 
         # Carry
         if result >= 2**mem.REGS_MOD:
-            mem.flags['C'] = 1
+            mem.flags["C"] = 1
         else:
-            mem.flags['C'] = 0
+            mem.flags["C"] = 0
 
         # Overflow
         in1 = mem.regs_read(a2)
@@ -229,17 +233,18 @@ def execr(mem, instr: dict[str, str]):
             in2 = immu2int(a3)
         else:
             in2 = mem.regs_read(a3)
-        regsNeg = 2**(mem.REGS_MOD - 1)
-        if   op[:3] == "AND":
-            if (in1 <  regsNeg and in2 <  regsNeg and result >= regsNeg) or \
-               (in1 >= regsNeg and in2 >= regsNeg and result <  regsNeg):
-                mem.flags['V'] = 1
+        regsNeg = 2 ** (mem.REGS_MOD - 1)
+        if op[:3] == "AND":
+            if (in1 < regsNeg and in2 < regsNeg and result >= regsNeg) or (
+                in1 >= regsNeg and in2 >= regsNeg and result < regsNeg
+            ):
+                mem.flags["V"] = 1
             else:
-                mem.flags['V'] = 0
+                mem.flags["V"] = 0
         elif op[:3] == "ORR":
-            if (in1 <  regsNeg and in2 >= regsNeg and result >= regsNeg) or \
-               (in1 >= regsNeg and in2 <  regsNeg and result <  regsNeg):
-                mem.flags['V'] = 1
+            if (in1 < regsNeg and in2 >= regsNeg and result >= regsNeg) or (
+                in1 >= regsNeg and in2 < regsNeg and result < regsNeg
+            ):
+                mem.flags["V"] = 1
             else:
-                mem.flags['V'] = 0         
-        
+                mem.flags["V"] = 0

@@ -3,22 +3,24 @@
 import PySimpleGUIQt as sg
 from copy import deepcopy as dpcp
 
-font = ('mono', 10)
+font = ("mono", 10)
 button_size = (10, 0.75)
 
 layout = [
     [
         sg.Stretch(),
-        sg.Button('Reset', size=button_size), 
-        sg.Button('Back', size=button_size), 
-        sg.Button('Stop', size=button_size), 
-        sg.Button('Step', size=button_size), 
-        sg.Button('Run', size=button_size),
-        sg.Stretch()
+        sg.Button("Reset", size=button_size),
+        sg.Button("Back", size=button_size),
+        sg.Button("Stop", size=button_size),
+        sg.Button("Step", size=button_size),
+        sg.Button("Run", size=button_size),
+        sg.Stretch(),
     ],
     [
         sg.Stretch(),
-        sg.Multiline('', size=(50, 30), 
+        sg.Multiline(
+            "",
+            size=(50, 30),
             key="codePane",
             font=font,
             disabled=True,
@@ -27,8 +29,9 @@ layout = [
             # expand_x=True,
             # expand_y=True,
         ),
-        sg.Multiline('', 
-            size=(40, 30), 
+        sg.Multiline(
+            "",
+            size=(40, 30),
             key="regPane",
             disabled=True,
             font=font,
@@ -37,26 +40,28 @@ layout = [
             # expand_x=True,
             # expand_y=True,
         ),
-        sg.Stretch()
+        sg.Stretch(),
     ],
     [
         sg.Stretch(),
-        sg.Multiline('',
-                size=(90, 2),
-                key="flagPane",
-                disabled=True,
-                font=font,
-                # no_scrollbar=True,
-                # write_only=True,
-                # expand_x=True,
-                # expand_y=True,
-            ),
-        sg.Stretch()
+        sg.Multiline(
+            "",
+            size=(90, 2),
+            key="flagPane",
+            disabled=True,
+            font=font,
+            # no_scrollbar=True,
+            # write_only=True,
+            # expand_x=True,
+            # expand_y=True,
+        ),
+        sg.Stretch(),
     ],
     [
         sg.Stretch(),
-        sg.Multiline('', 
-            size=(90, 16), 
+        sg.Multiline(
+            "",
+            size=(90, 16),
             key="memPane",
             disabled=True,
             font=font,
@@ -65,9 +70,10 @@ layout = [
             # expand_x=True,
             # expand_y=True,
         ),
-        sg.Stretch()
-    ]
+        sg.Stretch(),
+    ],
 ]
+
 
 def currCode(sim, low: int = -5, high: int = 5) -> str:
     """String showing surrounding code to PC
@@ -83,18 +89,19 @@ def currCode(sim, low: int = -5, high: int = 5) -> str:
     imem = sim.imem_raw
     pc = sim.mem.pc
     out = []
-    for i in range(pc+low, pc+high):
+    for i in range(pc + low, pc + high):
         if i < 0 or i >= sim.imem_len:
-            out.append('')
+            out.append("")
             continue
-        
+
         if i == pc:
             prefix = "--> | "
         else:
             prefix = f"{i:3} | "
 
         out.append(f"{prefix}{imem[i]}")
-    return '\n'.join(out)
+    return "\n".join(out)
+
 
 def gui(sim):
     """Runs an interactive GUI for the simulator using PySimpleGUIQt
@@ -104,7 +111,7 @@ def gui(sim):
     """
 
     # Create the Window
-    window = sg.Window('Ponyo - ISA Simulator', layout)
+    window = sg.Window("Ponyo - ISA Simulator", layout)
     # Event Loop to process "events"
     run = False
     end_code = False
@@ -112,7 +119,7 @@ def gui(sim):
     while sim.mem.pc < sim.imem_len or end_code:
 
         event, _ = window.read(timeout=150)
-        
+
         if event == sg.WIN_CLOSED:
             break
         elif event == "__TIMEOUT__" and not run:
@@ -129,12 +136,12 @@ def gui(sim):
             prev_sims.append(dpcp(sim.mem))
             if len(prev_sims) > 100:
                 prev_sims = prev_sims[1:]
-        
-        window['codePane'].update(value=currCode(sim, -16, 16))
-        window['memPane'].update(value=sim.mem.mem2str())
-        window['regPane'].update(value=sim.mem.reg2str())
-        window['flagPane'].update(value=sim.mem.pcfl2str())
-        
+
+        window["codePane"].update(value=currCode(sim, -16, 16))
+        window["memPane"].update(value=sim.mem.mem2str())
+        window["regPane"].update(value=sim.mem.reg2str())
+        window["flagPane"].update(value=sim.mem.pcfl2str())
+
         if event == "Stop":
             run = False
         elif event == "Step" and not end_code:
