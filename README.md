@@ -7,6 +7,8 @@
 Ponyo is a (work-in-progress) ISA simulator currently supporting (some of) LEGv8.
 It also aims to be a framework for implementing simulators for any number of ISAs.
 
+A blog post describing the initial development of this project is on my blog [here](https://blog.eowyn.net/ponyo_blog/).
+
 ## Simulator
 
 - ARM LEGv8 Simulator
