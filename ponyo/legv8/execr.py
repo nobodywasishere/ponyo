@@ -1,5 +1,13 @@
 
-def immu2int(immu):
+def immu2int(immu: str) -> int:
+    """Converts an immediate value into an integer
+
+    Args:
+        immu (str): Immediate value (e.g. `#10`, `0x03`, `b00101`)
+
+    Returns:
+        int: Value stored in immediate
+    """
     if immu[0] == "#":
         return int(immu[1:])
     elif immu[:2] == "0x":
@@ -9,7 +17,16 @@ def immu2int(immu):
     else:
         return int(immu)
 
-def execr(mem, instr):
+def execr(mem, instr: dict[str, str]):
+    """Executes the instruction on the simulator state for the LEGv8 ISA
+
+    Args:
+        mem (legv8.mem): ISA memory class
+        instr (dict[str, str]): Decoded instruction
+
+    Raises:
+        Exception: If an unsupported instruction is executed
+    """
 
     # | type | op     | a1   | a2   | a3   | a4    |
     # |------|--------|------|------|------|-------|
@@ -168,7 +185,7 @@ def execr(mem, instr):
     # elif op == "SDIV":
     #     pass
     # elif op == "SMULH":
-    #     mem.regs[int(a1[1:])] = (mem.regs[int(a2[1:])] * mem.regs[int(a3[1:])]) >> mem.regsMod
+    #     mem.regs[int(a1[1:])] = (mem.regs[int(a2[1:])] * mem.regs[int(a3[1:])]) >> mem.REGS_MOD
     # elif op == "UDIV":
     #     pass
     # elif op == "UMULH":
@@ -195,13 +212,13 @@ def execr(mem, instr):
             mem.flags['Z'] = 0
 
         # Negative
-        if (result % 2**mem.regsMod) >= 2**(mem.regsMod - 1):
+        if (result % 2**mem.REGS_MOD) >= 2**(mem.REGS_MOD - 1):
             mem.flags['N'] = 1
         else:
             mem.flags['N'] = 0
 
         # Carry
-        if result >= 2**mem.regsMod:
+        if result >= 2**mem.REGS_MOD:
             mem.flags['C'] = 1
         else:
             mem.flags['C'] = 0
@@ -212,7 +229,7 @@ def execr(mem, instr):
             in2 = immu2int(a3)
         else:
             in2 = mem.regs_read(a3)
-        regsNeg = 2**(mem.regsMod - 1)
+        regsNeg = 2**(mem.REGS_MOD - 1)
         if   op[:3] == "AND":
             if (in1 <  regsNeg and in2 <  regsNeg and result >= regsNeg) or \
                (in1 >= regsNeg and in2 >= regsNeg and result <  regsNeg):

@@ -1,0 +1,16 @@
+site_name: ponyo
+site_url: https://blog.eowyn.net/ponyo
+site_author: Margret Riegert
+
+# Repository
+repo_name: GitHub
+repo_url: https://github.com/nobodywasishere/ponyo
+edit_uri: edit/master/docs
+docs_dir: docs
+
+plugins:
+  - awesome-pages
+  - search
+
+theme:
+  name: readthedocs

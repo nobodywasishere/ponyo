@@ -1,6 +1,14 @@
 import re
 
-def findSymbols(imem):
+def findSymbols(imem: list[str]) -> dict[str, int]:
+    """Find the symbols in the instruction memory, e.g. `main:`
+
+    Args:
+        imem (list[str]): Instruction memory
+
+    Returns:
+        dict[str, int]: Dictionary of symbols corresponding with their line numbers
+    """
     sym = {}
     for line_i, line in enumerate(imem):
         op = line.strip().split(' ')[0]
@@ -9,7 +17,17 @@ def findSymbols(imem):
     return sym
 
 # Decode an instruction into its component parts
-def decode(pc, assembly, sym):
+def decode(pc: int, assembly: str, sym: dict[str, int]) -> dict[str, str]:
+    """Decodes each instruction into a simpler format, replacing symbols, register aliases, and removing comments for the LEGv8 ISA
+
+    Args:
+        pc (int): Program counter
+        assembly (str): Instruction to decode
+        sym (dict[str, int]): Symbol dictionary
+
+    Returns:
+        dict[str, str]: Decoded instruction
+    """
     # Assumes assembly is correctly formatted
 
     instr = {
